@@ -1,10 +1,21 @@
 import React, { Component } from "react";
 
-// const Statistics = () => {
-//   return (
+const Section = ({ title, children }) => {
+  return (
+    <section>
+      <h1>{title}</h1>
+      {children}
+    </section>
+  )
+};
 
-//   )
-// };
+const Buttons = ({ options, total, onLeaveFeedback }) => {
+  return (
+  <div>
+    {options.map(option => <button key={option} onClick={() => { onLeaveFeedback }}>{options}</button>)}
+  </div>
+  )
+}
 
 export class App extends Component {
   state = {
@@ -13,32 +24,57 @@ export class App extends Component {
     bad: 0
   };
 
-  // Metoda, którą będziemy przekazywać do przycisku
-  updateStatisctics= evt => {
-    console.log(evt); // Dostępny obiekt zdarzenia w odwołaniu onClick
-    
+  updateGood = () => {    
     this.setState({
-      message: new Date().toLocaleTimeString(),
+      good: this.state.good + 1,
     });
   };
 
+  updateNeutral = () => {
+    this.setState({
+      neutral: this.state.neutral + 1,
+    });
+  };
+
+
+  updateBad = () => {
+    this.setState({
+      bad: this.state.bad + 1,
+    });
+  };
+
+  countTotalFeedback = () => {
+    const { good, neutral, bad } = this.state;
+    return good + neutral + bad;
+  };
+
+  countPositiveFeedbackPercentage = () => {
+    const { good } = this.state;
+    let total = this.countTotalFeedback();
+    return Math.round((good / total) * 100);
+  }
+
+
   render() {
+    const { good, neutral, bad } = this.state;
+    const options = [ good, neutral, bad ];
+    const total = this.countTotalFeedback();
+    const positivePercentage = this.countPositiveFeedbackPercentage();
     return (
       <>
-        <h1>Please leave feedback</h1>
 
-        <section>
-          <button>Good</button>
-          <button>Neutral</button>
-          <button>Bad</button>
-        </section>
-        
+        <Section title="Please leave feedback">
+          <Buttons options={options} total={total} onLeaveFeedback={this.countTotalFeedback}/>
+        </Section>
+
         <h1>Statistics</h1>
 
         <section>
-          <p>Good: {this.state.good}</p>
-          <p>Neutral: {this.state.neutral}</p>
-          <p>Bad: {this.state.bad}</p>
+          <p>Good: {good}</p>
+          <p>Neutral: {neutral}</p>
+          <p>Bad: {bad}</p>
+          <p>Total: {total}</p>
+          <p>Positive feedback: {positivePercentage}%</p>
         </section>
       </>
     );
