@@ -17,8 +17,8 @@ export const FeedbackOptions = ({ options, onLeaveFeedback }) => {
 }
 
 FeedbackOptions.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({
+  items: PropTypes.shape({
     options: PropTypes.string,
     onLeaveFeedback: PropTypes.func
-  }))
+  })
 };
